@@ -16,7 +16,7 @@ func main() {
 		"Мск",
 		"На Київ",
 		"Ушёл в тайгу",
-		"Где-то степях Казахстана",
+		"Где-то в степях Казахстана",
 		"Это секрет, товарищ майор",
 		"Другое",
 	}
@@ -56,7 +56,7 @@ func main() {
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 
-			if msg.Text == "+" {
+			if msg.Text == "+" || msg.Text == "-" {
 				msg.Text = "ты чё мля с калькулятора, сцука?"
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
