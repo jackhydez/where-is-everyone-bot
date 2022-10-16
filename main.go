@@ -75,19 +75,6 @@ func main() {
 				}
 			}
 
-			// todo: delete hack
-			if strings.Contains(text, "del del") {
-				id := update.Message.MessageID
-				ac := 0
-				for ac <= 72 {
-					del := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, id)
-					id -= 1
-					ac++
-					bot.Send(del)
-				}
-
-			}
-
 			if countAnswerWorld >= 2 {
 				if strings.Contains(text, wordsWhere[0]) {
 					poll := tgbotapi.SendPollConfig{
