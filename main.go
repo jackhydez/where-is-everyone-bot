@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	locations := []string{
 		"Советск",
 		"Киров",
@@ -72,6 +73,19 @@ func main() {
 				if isContain {
 					countAnswerWorld++
 				}
+			}
+
+			// todo: delete hack
+			if strings.Contains(text, "del del") {
+				id := update.Message.MessageID
+				ac := 0
+				for ac <= 72 {
+					del := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, id)
+					id -= 1
+					ac++
+					bot.Send(del)
+				}
+
 			}
 
 			if countAnswerWorld >= 2 {
