@@ -86,7 +86,14 @@ func main() {
 						Options: locations,
 					}
 
+					pin := tgbotapi.PinChatMessageConfig{
+						ChatID:              update.Message.Chat.ID,
+						MessageID:           update.Message.MessageID + 1,
+						DisableNotification: false,
+					}
+
 					bot.Send(poll)
+					bot.Send(pin)
 				}
 
 				if strings.Contains(text, wordsLocations[0]) {
@@ -100,7 +107,14 @@ func main() {
 						CorrectOptionID: 0,
 					}
 
+					pin := tgbotapi.PinChatMessageConfig{
+						ChatID:              update.Message.Chat.ID,
+						MessageID:           update.Message.MessageID + 1,
+						DisableNotification: false,
+					}
+
 					bot.Send(poll)
+					bot.Send(pin)
 				}
 			}
 		}
