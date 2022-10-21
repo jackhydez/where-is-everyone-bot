@@ -1,8 +1,8 @@
-properties([pipelineTriggers([githubPush()])])
+// properties([pipelineTriggers([githubPush()])])
 
 pipeline {
     environment {
-        dockerRepo = "jackhydez/where-is-everyone-bot"
+        dockerRepo = "where-is-everyone-bot"
 
         dockerImageVersioned = ""
         dockerImageLatest = ""
@@ -14,8 +14,8 @@ pipeline {
         stage("Building docker image"){
             steps{
                 script{
-                    dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
-                    dockerImageLatest = docker.build dockerRepo + ":latest"
+                    // dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
+                    // dockerImageLatest = docker.build dockerRepo + ":latest"
                     sh "make build"
                 }
             }
@@ -29,15 +29,15 @@ pipeline {
         }
         stage('Cleaning up') {
             steps {
-                sh "docker rmi $dockerRepo:$BUILD_NUMBER"
+                // sh "docker rmi $dockerRepo:$BUILD_NUMBER"
             }
         }
     }
 
     /* Cleanup workspace */
-    post {
-       always {
-           deleteDir()
-       }
-   }
+//     post {
+//        always {
+//            deleteDir()
+//        }
+//    }
 }
