@@ -5,11 +5,6 @@ create file for environment variables:
 cp env-example.list env.list
 ```
 
-build docker image and run docker container:
-```
-make
-```
-
 build docker image:
 ```
 make build

@@ -24,7 +24,6 @@ func main() {
 
 	answers := []string{
 		"?",
-		"хто",
 		"кто",
 	}
 
@@ -58,7 +57,7 @@ func main() {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 
 			if msg.Text == "+" || msg.Text == "-" {
-				msg.Text = "ты чё мля с калькулятора, сцука?"
+				msg.Text = "ты чё мля с калькулятора, сцука!!?"
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
@@ -102,8 +101,8 @@ func main() {
 							ChatID: update.Message.Chat.ID,
 						},
 						Question: msg.Text,
-						Type:     "quiz",
-						Options: []string{"да", "нет"},
+						Type:     "regular",
+						Options: []string{"да", "нет", "пукнуть"},
 						CorrectOptionID: 0,
 					}
 

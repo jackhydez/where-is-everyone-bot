@@ -1,8 +1,6 @@
-properties([pipelineTriggers([githubPush()])])
-
 pipeline {
     environment {
-        dockerRepo = "jackhydez/where-is-everyone-bot"
+        dockerRepo = "where-is-everyone-bot"
 
         dockerImageVersioned = ""
         dockerImageLatest = ""
@@ -11,33 +9,29 @@ pipeline {
     agent any
 
     stages {
-        stage("Building docker image"){
+        stage("Building images"){
             steps{
                 script{
-                    dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
-                    dockerImageLatest = docker.build dockerRepo + ":latest"
                     sh "make build"
                 }
             }
         }
-        stage("Run docker container"){
+        stage("Run containers"){
             steps{
                 script{
-                    sh "make run"
+                    sh "make run-prod"
                 }
             }
         }
-        stage('Cleaning up') {
+        stage('Cleaning up containers') {
             steps {
-                sh "docker rmi $dockerRepo:$BUILD_NUMBER"
+                sh "make clean-containers"
+            }
+        }
+        stage('Cleaning up images') {
+            steps {
+                sh "make clean-images"
             }
         }
     }
-
-    /* Cleanup workspace */
-    post {
-       always {
-           deleteDir()
-       }
-   }
 }
