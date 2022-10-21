@@ -1,13 +1,23 @@
-# where-is-everyone-bot
+# Project telegram-bot where-is-everyone
 
 create file for environment variables:
 ```
 cp env-example.list env.list
 ```
 
-build and run docker container:
+build docker image and run docker container:
 ```
 make
+```
+
+build docker image:
+```
+make build
+```
+
+run docker container:
+```
+make run
 ```
 
 link on my dev:
