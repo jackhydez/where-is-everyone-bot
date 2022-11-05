@@ -7,6 +7,5 @@ stop:
 	docker rm $(docker ps -a -q)
 	docker rmi $(docker images -a -q)
 all:
-	make stop
 	docker build -t where-is-everyone-bot .
 	docker run --env-file env.list where-is-everyone-bot &
