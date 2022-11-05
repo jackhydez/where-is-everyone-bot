@@ -102,7 +102,7 @@ func main() {
 						},
 						Question: msg.Text,
 						Type:     "regular",
-						Options: []string{"да", "нет", "пукнуть"},
+						Options: []string{"да", "нет", "пукнуть!"},
 						CorrectOptionID: 0,
 					}
 
