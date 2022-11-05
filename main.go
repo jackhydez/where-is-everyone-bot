@@ -24,7 +24,6 @@ func main() {
 
 	answers := []string{
 		"?",
-		"хто",
 		"кто",
 	}
 
@@ -102,8 +101,8 @@ func main() {
 							ChatID: update.Message.Chat.ID,
 						},
 						Question: msg.Text,
-						Type:     "quiz",
-						Options: []string{"да", "нет"},
+						Type:     "regular",
+						Options: []string{"да", "нет", "пукнуть"},
 						CorrectOptionID: 0,
 					}
 
