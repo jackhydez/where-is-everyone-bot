@@ -101,8 +101,8 @@ func main() {
 							ChatID: update.Message.Chat.ID,
 						},
 						Question: msg.Text,
-						Type:     "regular",
-						Options: []string{"да", "нет", "пукнуть!"},
+						Type:     "quiz",
+						Options: []string{"да", "нет"},
 						CorrectOptionID: 0,
 					}
 
