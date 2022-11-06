@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Cleaning up') {
             steps {
-                sh "docker system prune -all"
+                sh "docker system prune -a"
                 // sh "docker stop $dockerRepo-${BUILD_NUMBER}"
                 // sh "docker rmi $dockerRepo"
                 // sh "docker rm $dockerRepo-${BUILD_NUMBER}"
