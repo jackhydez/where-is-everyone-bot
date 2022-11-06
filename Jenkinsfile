@@ -2,7 +2,7 @@
 
 pipeline {
     environment {
-        dockerRepo = "where-is-everyone-bot-${BUILD_NUMBER}"
+        dockerRepo = "where-is-everyone-bot"
 
         dockerImageVersioned = ""
         dockerImageLatest = ""
@@ -29,12 +29,12 @@ pipeline {
         }
         stage('Cleaning up') {
             steps {
-                // sh "docker stop $dockerRepo:$BUILD_NUMBER"
-                // sh "docker rmi $dockerRepo:$BUILD_NUMBER"
-                // sh "docker rm $dockerRepo:$BUILD_NUMBER"
-                sh "docker stop $dockerRepo"
+                sh "docker stop $dockerRepo-${BUILD_NUMBER}"
                 sh "docker rmi $dockerRepo"
-                sh "docker rm $dockerRepo"
+                sh "docker rm $dockerRepo-${BUILD_NUMBER}"
+                // sh "docker stop $dockerRepo"
+                // sh "docker rmi $dockerRepo"
+                // sh "docker rm $dockerRepo"
             }
         }
     }
