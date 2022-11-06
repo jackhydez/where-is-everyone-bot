@@ -40,7 +40,7 @@ pipeline {
         //         // sh "docker rmi $dockerRepo"
         //         // sh "docker rm $dockerRepo"
         //     }
-        }
+        // }
     }
 
     /* Cleanup workspace */
