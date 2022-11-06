@@ -16,9 +16,9 @@ pipeline {
                 script{
                     // dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
                     // dockerImageLatest = docker.build dockerRepo + ":latest"
-                    sh "docker stop $(docker ps -a -q)"
-	                sh "docker rm $(docker ps -a -q)"
-	                sh "docker rmi $(docker images -a -q)"
+                    // sh "docker stop $(docker ps -a -q)"
+	                // sh "docker rm $(docker ps -a -q)"
+	                // sh "docker rmi $(docker images -a -q)"
                     sh "make build"
                 }
             }
