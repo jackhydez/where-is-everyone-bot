@@ -13,6 +13,7 @@ pipeline {
     stages {
         stage('Cleaning up') {
             steps {
+                sh "ll"
                 sh "make clean"
             }
         }
