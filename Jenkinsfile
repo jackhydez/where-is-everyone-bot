@@ -11,10 +11,14 @@ pipeline {
     agent any
 
     stages {
+        stage('Cleaning up docker images') {
+            steps {
+                sh "docker rmi $(docker images -a -q)"
+            }
+        }
         stage('Cleaning up') {
             steps {
-                sh "docker rmi $(docker images -a -q); make clean"
-                // sh "make clean"
+                sh "make clean"
             }
         }
         stage("Building docker image"){
