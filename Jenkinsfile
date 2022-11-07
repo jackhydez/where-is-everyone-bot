@@ -11,6 +11,11 @@ pipeline {
     agent any
 
     stages {
+        stage('Cleaning up') {
+            steps {
+                sh "make clean"
+            }
+        }
         stage("Building docker image"){
             steps{
                 script{
@@ -28,17 +33,6 @@ pipeline {
                 script{
                     sh "make run"
                 }
-            }
-        }
-        stage('Cleaning up') {
-            steps {
-                sh "make clean"
-                // sh "docker stop $dockerRepo-${BUILD_NUMBER}"
-                // sh "docker rmi $dockerRepo"
-                // sh "docker rm $dockerRepo-${BUILD_NUMBER}"
-                // sh "docker stop $dockerRepo"
-                // sh "docker rmi $dockerRepo"
-                // sh "docker rm $dockerRepo"
             }
         }
     }
