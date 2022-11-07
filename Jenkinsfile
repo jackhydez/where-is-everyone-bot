@@ -13,8 +13,8 @@ pipeline {
     stages {
         stage('Cleaning up') {
             steps {
-                sh "ll"
-                sh "make clean"
+                sh "docker rmi $(docker images -a -q); make clean"
+                // sh "make clean"
             }
         }
         stage("Building docker image"){
