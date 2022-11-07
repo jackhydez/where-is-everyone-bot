@@ -1,5 +1,3 @@
-// properties([pipelineTriggers([githubPush()])])
-
 pipeline {
     environment {
         dockerRepo = "where-is-everyone-bot"
@@ -19,11 +17,6 @@ pipeline {
         stage("Building docker image"){
             steps{
                 script{
-                    // dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
-                    // dockerImageLatest = docker.build dockerRepo + ":latest"
-                    // sh "docker stop $(docker ps -a -q)"
-	                // sh "docker rm $(docker ps -a -q)"
-	                // sh "docker rmi $(docker images -a -q)"
                     sh "make build"
                 }
             }
@@ -41,11 +34,4 @@ pipeline {
             }
         }
     }
-
-    /* Cleanup workspace */
-//     post {
-//        always {
-//            deleteDir()
-//        }
-//    }
 }
