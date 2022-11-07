@@ -11,9 +11,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Cleaning up') {
+        stage('Cleaning up containers') {
             steps {
-                sh "make clean"
+                sh "make clean-containers"
             }
         }
         stage("Building docker image"){
@@ -33,6 +33,11 @@ pipeline {
                 script{
                     sh "make run"
                 }
+            }
+        }
+        stage('Cleaning up images') {
+            steps {
+                sh "make clean-images"
             }
         }
     }
