@@ -26,7 +26,7 @@ pipeline {
         stage("Run docker container"){
             steps{
                 script{
-                    sh "make run; docker rmi $(docker images -a -q);"
+                    sh "make run"
                 }
             }
         }
