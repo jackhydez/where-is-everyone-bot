@@ -9,23 +9,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Cleaning up containers') {
-            steps {
-                sh "make clean-containers"
-            }
-        }
-        stage("Building docker image"){
+        stage("Building images"){
             steps{
                 script{
                     sh "make build"
                 }
             }
         }
-        stage("Run docker container"){
+        stage("Run containers"){
             steps{
                 script{
                     sh "make run"
                 }
+            }
+        }
+        stage('Cleaning up containers') {
+            steps {
+                sh "make clean-containers"
             }
         }
         stage('Cleaning up images') {
