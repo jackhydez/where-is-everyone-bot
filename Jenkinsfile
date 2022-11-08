@@ -19,7 +19,7 @@ pipeline {
         stage("Run containers"){
             steps{
                 script{
-                    sh "make run"
+                    sh "make run-prod"
                 }
             }
         }
