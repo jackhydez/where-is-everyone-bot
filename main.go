@@ -10,6 +10,8 @@ import (
 
 func main() {
 
+	const ONE_MIN = 60
+
 	locations := []string{
 		"Советск",
 		"Киров",
@@ -47,7 +49,7 @@ func main() {
 	// log.Printf("Authorized on account %s", bot.Self.UserName)
 
 	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	u.Timeout = ONE_MIN
 
 	updates := bot.GetUpdatesChan(u)
 
