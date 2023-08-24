@@ -9,10 +9,20 @@ pipeline {
     agent any
 
     stages {
+        stage('Stop and remove containter') {
+            steps {
+                sh "make stop-and-remove-container"
+            }
+        }
+        stage('Cleaning up images') {
+            steps {
+                sh "make clean-images"
+            }
+        }
         stage("Building images"){
             steps{
                 script{
-                    sh "make build"
+                    sh "make build-prod"
                 }
             }
         }
@@ -21,16 +31,6 @@ pipeline {
                 script{
                     sh "make run-prod"
                 }
-            }
-        }
-        stage('Cleaning up containers') {
-            steps {
-                sh "make clean-containers"
-            }
-        }
-        stage('Cleaning up images') {
-            steps {
-                sh "make clean-images"
             }
         }
     }

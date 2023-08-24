@@ -5,14 +5,14 @@ create file for environment variables:
 cp env-example.list env.list
 ```
 
-build docker image:
+build and run all:
 ```
-make build
+docker-compose --env-file env.list up --build
 ```
 
-run docker container:
+stop and remove all:
 ```
-make run
+docker-compose --env-file env.list down
 ```
 
 link on my dev:

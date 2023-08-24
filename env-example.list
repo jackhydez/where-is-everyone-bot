@@ -1,1 +1,17 @@
+# telegram
 BOT_TOKEN=1234
+
+# database
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=name_db
+POSTGRES_PORT=4321
+POSTGRES_HOST=postgres_container
+
+# admin
+PGADMIN_DEFAULT_EMAIL=user@user.com
+PGADMIN_DEFAULT_PASSWORD=password
+PGADMIN_PORT=5400
+
+# backend
+API_PORT=3000

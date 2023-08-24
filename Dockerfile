@@ -8,4 +8,5 @@ RUN go build -o /main cmd/app/main.go
 # Финальный этап, копируем собранное приложение
 FROM alpine:3
 COPY --from=builder main /bin/main
+EXPOSE 8050
 ENTRYPOINT ["/bin/main"]

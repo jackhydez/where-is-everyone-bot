@@ -4,9 +4,18 @@ import (
 	"log"
 	"strings"
 	"os"
+	"fmt"
+	"database/sql"
+	_ "github.com/lib/pq"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
+
+var host string = os.Getenv("POSTGRES_HOST")
+var port string = os.Getenv("POSTGRES_PORT")
+var user string = os.Getenv("POSTGRES_USER")
+var password string = os.Getenv("POSTGRES_PASSWORD")
+var dbname   string = os.Getenv("POSTGRES_DB")
 
 func main() {
 
@@ -17,10 +26,6 @@ func main() {
 		"Киров",
 		"Йошка",
 		"Мск",
-		"На Київ",
-		"Ушёл в тайгу",
-		"Где-то в степях Казахстана",
-		"Это секрет, товарищ майор",
 		"Другое",
 	}
 
@@ -35,6 +40,18 @@ func main() {
 
 	wordsLocations := []string{
 		"сов",
+	}
+
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
 	}
 
 
@@ -59,7 +76,7 @@ func main() {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 
 			if msg.Text == "+" || msg.Text == "-" {
-				msg.Text = "ты чё мля с калькулятора, сцука!1?"
+				msg.Text = "ты чё мля с калькулятора, сцука!!1?"
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
