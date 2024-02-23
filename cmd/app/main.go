@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
-	"strings"
-	"os"
-	"fmt"
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
+	"log"
+	"os"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -15,7 +15,7 @@ var host string = os.Getenv("POSTGRES_HOST")
 var port string = os.Getenv("POSTGRES_PORT")
 var user string = os.Getenv("POSTGRES_USER")
 var password string = os.Getenv("POSTGRES_PASSWORD")
-var dbname   string = os.Getenv("POSTGRES_DB")
+var dbname string = os.Getenv("POSTGRES_DB")
 
 func main() {
 
@@ -54,7 +54,6 @@ func main() {
 		panic(err)
 	}
 
-
 	token := os.Getenv("BOT_TOKEN")
 	bot, err := tgbotapi.NewBotAPI(token)
 
@@ -76,7 +75,7 @@ func main() {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 
 			if msg.Text == "+" || msg.Text == "-" {
-				msg.Text = "ты чё мля с калькулятора, сцука!!1?"
+				msg.Text = "вы что с калькулятора сударь!?"
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
@@ -100,8 +99,8 @@ func main() {
 							ChatID: update.Message.Chat.ID,
 						},
 						Question: msg.Text,
-						Type: "regular",
-						Options: locations,
+						Type:     "regular",
+						Options:  locations,
 					}
 
 					pin := tgbotapi.PinChatMessageConfig{
@@ -119,9 +118,9 @@ func main() {
 						BaseChat: tgbotapi.BaseChat{
 							ChatID: update.Message.Chat.ID,
 						},
-						Question: msg.Text,
-						Type:     "regular",
-						Options: []string{"да", "нет", "пукнуть"},
+						Question:        msg.Text,
+						Type:            "regular",
+						Options:         []string{"да", "нет", "пукнуть"},
 						CorrectOptionID: 0,
 					}
 
