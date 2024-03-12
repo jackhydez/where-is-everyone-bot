@@ -22,24 +22,5 @@ t.me/where_is_everyone_dev_bot
 
 link on my prod:
 ```
-t.me/where_is_everyone_bot
-```
-
-solution for:  FATAL:  role "postgres" does not exist
-```
-docker exec -it postgres_container bash
-
-psql postgres
-
-\du
-
-CREATE USER postgres SUPERUSER;
-
-CREATE DATABASE postgres WITH OWNER postgres;
-
-\du
-
-\q
-
-exit
+t.me/where_is_every_one_bot
 ```
