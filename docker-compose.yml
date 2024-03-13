@@ -9,8 +9,11 @@ services:
     image: where-is-everyone-bot
     restart: always
     container_name: where-is-everyone-bot
+    # ports:
+    #   - "${API_PORT}:8050"
     ports:
-      - "${API_PORT}:8050"
+      - target: 8050
+        published: ${API_PORT}
     depends_on:
       db:
         condition: service_healthy
@@ -32,8 +35,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    # ports:
+      # - "${POSTGRES_PORT}:5432"
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - target: 5432
+        published: ${POSTGRES_PORT}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -58,8 +64,11 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    # ports:
+      # - "${PGADMIN_PORT}:80"
     ports:
-      - "${PGADMIN_PORT}:80"
+      - target: 80
+        published: ${PGADMIN_PORT}
 
   migrate:
     image: migrate/migrate
