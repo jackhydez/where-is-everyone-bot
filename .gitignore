@@ -1,5 +1,6 @@
 db/data/*
 env.list
+.env
 main
 go.work
 go.work.sum

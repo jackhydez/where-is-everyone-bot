@@ -2,7 +2,7 @@
 
 create file for environment variables:
 ```
-cp env-example.list env.list
+cp env-example.list .env
 ```
 
 build and run all:
@@ -17,7 +17,7 @@ docker-compose --env-file env.list down
 
 link on my dev:
 ```
-t.me/where_is_everyone_dev_bot
+t.me/where_is_every_one_dev_bot
 ```
 
 link on my prod:
