@@ -1,7 +1,7 @@
 build:
 	docker-compose build
 run:
-	docker-compose up -d --no-deps
+	docker-compose up -d
 stop:
 	docker-compose stop
 	yes | docker-compose rm

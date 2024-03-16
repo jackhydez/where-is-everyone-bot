@@ -141,7 +141,7 @@ func main() {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 
 			if msg.Text == "+" || msg.Text == "-" {
-				msg.Text = "Вы что с калькулятора, сударь!?"
+				msg.Text = "Вы что с калькулятора, сударь!1?"
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
