@@ -15,7 +15,7 @@ services:
       db:
         condition: service_healthy
     env_file:
-      - env.list
+      - .env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -27,7 +27,7 @@ services:
     image: postgres
     restart: always
     env_file:
-      - env.list
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -54,7 +54,7 @@ services:
     networks:
       - mynetwork
     env_file:
-      - env.list
+      - .env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -68,6 +68,8 @@ services:
         condition: service_healthy
     networks:
       - mynetwork
+    env_file:
+      - .env
     volumes:
       - ./db/migrations:/migrations
     user: 1000:1000

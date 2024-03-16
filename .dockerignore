@@ -1,4 +1,4 @@
 db/data
-env.list
+.env
 env-example.list
 README.md

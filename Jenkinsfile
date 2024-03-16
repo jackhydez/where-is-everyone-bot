@@ -11,25 +11,25 @@ pipeline {
     stages {
         stage('Stop and remove containter') {
             steps {
-                sh "make stop-and-remove-container"
+                sh "make stop"
             }
         }
         stage('Cleaning up images') {
             steps {
-                sh "make clean-images"
+                sh "make clean"
             }
         }
         stage("Building images"){
             steps{
                 script{
-                    sh "make build-prod"
+                    sh "make build"
                 }
             }
         }
         stage("Run containers"){
             steps{
                 script{
-                    sh "make run-prod"
+                    sh "make run"
                 }
             }
         }

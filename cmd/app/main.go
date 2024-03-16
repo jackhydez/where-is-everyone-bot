@@ -17,6 +17,7 @@ var port string = os.Getenv("POSTGRES_PORT")
 var user string = os.Getenv("POSTGRES_USER")
 var password string = os.Getenv("POSTGRES_PASSWORD")
 var dbname string = os.Getenv("POSTGRES_DB")
+var token string = os.Getenv("BOT_TOKEN")
 
 func postgresPin(pin tgbotapi.PinChatMessageConfig, type_pull string) (int64, int) {
 
@@ -120,7 +121,6 @@ func main() {
 		"сов",
 	}
 
-	token := os.Getenv("BOT_TOKEN")
 	bot, err := tgbotapi.NewBotAPI(token)
 
 	if err != nil {
