@@ -11,9 +11,9 @@ services:
     container_name: where-is-everyone-bot
     ports:
       - "${API_PORT}:8050"
-    depends_on:
-      db:
-        condition: service_healthy
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -31,11 +31,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "${POSTGRES_PORT}:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     volumes:
       - ./db/data:/var/lib/postgresql/data
     user: 1000:1000
@@ -56,36 +56,36 @@ services:
     ports:
       - "${PGADMIN_PORT}:80"
 
-  # migrate:
-  #   image: migrate/migrate
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   networks:
-  #     - mynetwork
-  #   volumes:
-  #     - ./db/migrations:/migrations
-  #   user: 1000:1000
-  #   environment:
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_HOST: ${POSTGRES_HOST}
-  #     POSTGRES_PORT: ${POSTGRES_PORT}
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #   command: [
-  #     "-path",
-  #     "/migrations",
-  #     "-database",
-  #     "postgres://\
-  #     $POSTGRES_USER:\
-  #     $POSTGRES_PASSWORD@\
-  #     $POSTGRES_HOST:\
-  #     $POSTGRES_PORT/\
-  #     $POSTGRES_DB?\
-  #     sslmode=disable",
-  #     "up"]
-  #   links: 
-  #     - db
+  migrate:
+    image: migrate/migrate
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    networks:
+      - mynetwork
+    volumes:
+      - ./db/migrations:/migrations
+    user: 1000:1000
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+    command: [
+      "-path",
+      "/migrations",
+      "-database",
+      "postgres://\
+      $POSTGRES_USER:\
+      $POSTGRES_PASSWORD@\
+      $POSTGRES_HOST:\
+      $POSTGRES_PORT/\
+      $POSTGRES_DB?\
+      sslmode=disable",
+      "up"]
+    links: 
+      - db
 
 networks:
   mynetwork:
