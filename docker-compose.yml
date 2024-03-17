@@ -9,6 +9,7 @@ services:
     image: where-is-everyone-bot
     restart: always
     container_name: where-is-everyone-bot
+    user: "${MY_UID}:${GID}"
     env_file:
       - .env
     ports:
