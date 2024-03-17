@@ -16,7 +16,7 @@ services:
     #   db:
     #     condition: service_healthy
     depends_on:
-       - db
+      - db
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
