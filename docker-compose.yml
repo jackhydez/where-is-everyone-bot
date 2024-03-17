@@ -10,13 +10,8 @@ services:
     restart: always
     container_name: where-is-everyone-bot
     user: 1000:1000
-    env_file:
-      - .env
     ports:
       - "${API_PORT}:8050"
-    # depends_on:
-    #   db:
-    #     condition: service_healthy
     depends_on:
       - db
     environment:
@@ -68,9 +63,6 @@ services:
 
   migrate:
     image: migrate/migrate
-    # depends_on:
-    #   db:
-    #     condition: service_healthy
     depends_on:
       - db
     networks:
