@@ -1,7 +1,7 @@
 build:
 	docker-compose build
 run:
-	MY_UID=${UID} GID=${GID} docker-compose up -d
+	MY_UID=$(id -u) GID=$(id -g) docker-compose up -d
 stop:
 	docker-compose stop
 	yes | docker-compose rm
