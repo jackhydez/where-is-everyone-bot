@@ -9,7 +9,10 @@ services:
     image: where-is-everyone-bot
     restart: always
     container_name: where-is-everyone-bot
-    user: 1000:1000
+
+    # user: 1000:1000
+    user: "${MY_UID}:${GID}"
+
     ports:
       - "${API_PORT}:8050"
     depends_on:
@@ -43,7 +46,10 @@ services:
       retries: 5
     volumes:
       - ./db/data:/var/lib/postgresql/data
+
+    #
     user: "${MY_UID}:${GID}"
+
     networks:
       mynetwork:
         aliases:
@@ -53,6 +59,9 @@ services:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
     restart: always
+    #
+    user: "${MY_UID}:${GID}"
+
     networks:
       - mynetwork
     environment:
@@ -69,7 +78,10 @@ services:
       - mynetwork
     volumes:
       - ./db/migrations:/migrations
-    user: 1000:1000
+
+    # user: 1000:1000
+    user: "${MY_UID}:${GID}"
+
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
