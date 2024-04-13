@@ -3,21 +3,38 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"log"
 	"os"
 	"strings"
 	"time"
 
+	_ "github.com/lib/pq"
+
+	// "github.com/robfig/cron/v3"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-var host string = os.Getenv("POSTGRES_HOST")
-var port string = os.Getenv("POSTGRES_PORT")
-var user string = os.Getenv("POSTGRES_USER")
-var password string = os.Getenv("POSTGRES_PASSWORD")
-var dbname string = os.Getenv("POSTGRES_DB")
-var token string = os.Getenv("BOT_TOKEN")
+var (
+	host     string
+	port     string
+	user     string
+	password string
+	dbname   string
+	botToken string
+)
+
+func init() {
+	host = os.Getenv("POSTGRES_HOST")
+	port = os.Getenv("POSTGRES_PORT")
+	user = os.Getenv("POSTGRES_USER")
+	password = os.Getenv("POSTGRES_PASSWORD")
+	dbname = os.Getenv("POSTGRES_DB")
+	botToken = os.Getenv("BOT_TOKEN")
+
+	if host == "" || port == "" || user == "" || password == "" || dbname == "" || botToken == "" {
+		log.Fatal("Some environment variables are not set")
+	}
+}
 
 func postgresPin(pin tgbotapi.PinChatMessageConfig, type_pull string) (int64, int) {
 
@@ -121,7 +138,24 @@ func main() {
 		"сов",
 	}
 
-	bot, err := tgbotapi.NewBotAPI(token)
+
+    // // Создание экземпляра cron
+	// c := cron.New()
+
+	// // Добавление задачи, которая будет выполняться каждую минуту
+	// _, err := c.AddFunc("0 1 * * *", func() {
+	// 	// log.Println("Задача выполнена:", time.Now())
+	// })
+
+	// if err != nil {
+	// 	log.Printf("Ошибка при добавлении функции в cron: %sn", err)
+	// 	return
+	// }
+	
+	// // Запуск планировщика задач
+	// c.Start()
+
+	bot, err := tgbotapi.NewBotAPI(botToken)
 
 	if err != nil {
 		log.Panic(err)
