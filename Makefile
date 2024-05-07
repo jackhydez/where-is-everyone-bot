@@ -6,5 +6,4 @@ stop:
 	docker-compose stop
 	yes | docker-compose rm
 clean:
-	docker rmi $(docker images -q)
 	docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi
