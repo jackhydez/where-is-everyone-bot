@@ -39,7 +39,10 @@ func init() {
 func postgresPin(pin tgbotapi.PinChatMessageConfig, type_pull string) (int64, int) {
 
 	// Коннект
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
+							"password=%s dbname=%s sslmode=disable",
+							host, port, user, password, dbname)
+
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
@@ -111,6 +114,50 @@ func postgresPin(pin tgbotapi.PinChatMessageConfig, type_pull string) (int64, in
 	return unpinChatID, unpinMessageID
 }
 
+func checkDatabaseConnection(bot *tgbotapi.BotAPI, chatID int64) {
+	count := 0
+    for {
+        time.Sleep(time.Minute / 2)
+
+		// Коннект
+		psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
+							"password=%s dbname=%s sslmode=disable",
+							host, port, user, password, dbname)
+
+		db, err := sql.Open("postgres", psqlInfo)
+		
+		if err != nil {
+			count++
+			if (count == 2) {
+            	msg := tgbotapi.NewMessage(chatID, "Нет коннекта к БД")
+            	bot.Send(msg)
+			}
+        }
+		defer db.Close()
+
+		// Пинг
+		err = db.Ping()
+		
+        if err != nil {
+			count++
+			if (count == 2) {
+   	        	msg := tgbotapi.NewMessage(chatID, "БД не пингует")
+            	bot.Send(msg)
+			}
+        }
+    }
+}
+
+func searchInSlice(slice []int64, value int64) bool {
+    for _, v := range slice {
+        if v == value {
+            return true
+        }
+    }
+    return false
+}
+
+
 func main() {
 
 	const WHERE_LOCATION string = "where_location"
@@ -169,10 +216,18 @@ func main() {
 
 	updates := bot.GetUpdatesChan(u)
 
+	var chatIDs []int64
+
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+
+			if !searchInSlice(chatIDs, update.Message.Chat.ID) {
+				chatIDs = append(chatIDs, update.Message.Chat.ID)
+				// Start a goroutine to check the database connection
+				go checkDatabaseConnection(bot, update.Message.Chat.ID)
+			}
 
 			if msg.Text == "+" || msg.Text == "-" {
 				msg.Text = "Вы что с калькулятора, сударь?"
