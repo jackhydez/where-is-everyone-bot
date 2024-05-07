@@ -230,7 +230,7 @@ func main() {
 			}
 
 			if msg.Text == "+" || msg.Text == "-" {
-				msg.Text = "Вы что с калькулятора, сударь?"
+				msg.Text = "Вы что с калькулятора, сударь!?"
 				msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
