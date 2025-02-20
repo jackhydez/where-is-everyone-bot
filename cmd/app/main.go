@@ -1,12 +1,13 @@
 package main
 
 import (
-	"database/sql"
+	// "database/sql"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 	"time"
+	"io/ioutil"
 
 	_ "github.com/lib/pq"
 
@@ -21,6 +22,7 @@ var (
 	password string
 	dbname   string
 	botToken string
+	pinFilePath = "/app/shared/pin_messages.txt"
 )
 
 func init() {
@@ -36,127 +38,31 @@ func init() {
 	}
 }
 
-func postgresPin(pin tgbotapi.PinChatMessageConfig, type_pull string) (int64, int) {
+func savePinnedMessage(chatID int64, messageID int, typePull string) error {
+	data := fmt.Sprintf("%d %d %s\n", chatID, messageID, typePull)
+	return ioutil.WriteFile(healthcheckFilePath, []byte(data), 0644)
+}
 
-	// Коннект
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
-							"password=%s dbname=%s sslmode=disable",
-							host, port, user, password, dbname)
-
-	db, err := sql.Open("postgres", psqlInfo)
+func getPinnedMessage(typePull string) (int64, int, error) {
+	content, err := ioutil.ReadFile(healthcheckFilePath)
 	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	// Пинг
-	err = db.Ping()
-	if err != nil {
-		panic(err)
+		return 0, 0, err
 	}
 
-	// Достать из бд последний закрепленный
-	selectStmt, err := db.Prepare("SELECT * FROM pin_pull WHERE $1 = chat_id AND $2 = type_pull")
-	if err != nil {
-		panic(err)
-	}
-	defer selectStmt.Close()
+	var chatID int64
+	var messageID int
+	var savedTypePull string
 
-	rows, err := selectStmt.Query(pin.ChatID, type_pull)
-	if err != nil {
-		panic(err)
-	}
-
-	var unpinChatID int64
-	var unpinMessageID int
-
-	for rows.Next() {
-		var id int
-		var createdAt time.Time
-		var typePull string
-
-		if err := rows.Scan(&id, &unpinChatID, &unpinMessageID, &createdAt, &typePull); err != nil {
-			panic(err)
+	lines := strings.Split(string(content), "\n")
+	for _, line := range lines {
+		fmt.Sscanf(line, "%d %d %s", &chatID, &messageID, &savedTypePull)
+		if savedTypePull == typePull {
+			return chatID, messageID, nil
 		}
 	}
-	if err := rows.Err(); err != nil {
-		panic(err)
-	}
 
-	// Подготовка SQL-запросов
-	insertStmt, err := db.Prepare("INSERT INTO pin_pull(chat_id, message_id, type_pull, created_at) VALUES($1, $2, $3, $4)")
-	if err != nil {
-		panic(err)
-	}
-	defer insertStmt.Close()
-
-	deleteStmt, err := db.Prepare("DELETE FROM pin_pull WHERE chat_id = $1 AND message_id = $2 AND type_pull = $3")
-	if err != nil {
-		panic(err)
-	}
-	defer deleteStmt.Close()
-
-	// Удаление данных из таблицы
-	_, err = deleteStmt.Exec(unpinChatID, unpinMessageID, type_pull)
-	if err != nil {
-		panic(err)
-	}
-
-	// Текущая дата
-	currentDate := time.Now().Format("2006-01-02")
-
-	//  Добавление данных в таблицу
-	_, err = insertStmt.Exec(pin.ChatID, pin.MessageID, type_pull, currentDate)
-	if err != nil {
-		panic(err)
-	}
-
-	return unpinChatID, unpinMessageID
+	return 0, 0, fmt.Errorf("no pinned message found for type: %s", typePull)
 }
-
-func checkDatabaseConnection(bot *tgbotapi.BotAPI, chatID int64) {
-	count := 0
-    for {
-        time.Sleep(time.Minute / 2)
-
-		// Коннект
-		psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
-							"password=%s dbname=%s sslmode=disable",
-							host, port, user, password, dbname)
-
-		db, err := sql.Open("postgres", psqlInfo)
-		
-		if err != nil {
-			count++
-			if (count == 2) {
-            	msg := tgbotapi.NewMessage(chatID, "Нет коннекта к БД")
-            	bot.Send(msg)
-			}
-        }
-		defer db.Close()
-
-		// Пинг
-		err = db.Ping()
-		
-        if err != nil {
-			count++
-			if (count == 2) {
-   	        	msg := tgbotapi.NewMessage(chatID, "БД не пингует")
-            	bot.Send(msg)
-			}
-        }
-    }
-}
-
-func searchInSlice(slice []int64, value int64) bool {
-    for _, v := range slice {
-        if v == value {
-            return true
-        }
-    }
-    return false
-}
-
 
 func main() {
 
@@ -184,7 +90,6 @@ func main() {
 	wordsLocations := []string{
 		"сов",
 	}
-
 
     // // Создание экземпляра cron
 	// c := cron.New()
@@ -216,18 +121,10 @@ func main() {
 
 	updates := bot.GetUpdatesChan(u)
 
-	var chatIDs []int64
-
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-
-			if !searchInSlice(chatIDs, update.Message.Chat.ID) {
-				chatIDs = append(chatIDs, update.Message.Chat.ID)
-				// Start a goroutine to check the database connection
-				go checkDatabaseConnection(bot, update.Message.Chat.ID)
-			}
 
 			if msg.Text == "+" || msg.Text == "-" {
 				msg.Text = "Вы что с калькулятора, сударь!?"
