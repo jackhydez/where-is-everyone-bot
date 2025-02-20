@@ -35,6 +35,7 @@ func init() {
 }
 
 func main() {
+	// changes
 
 	const WHERE_LOCATION string = "where_location"
 	const TOWN_LOCATION string = "town_location"
