@@ -1,17 +1,14 @@
 package main
 
 import (
-	// "database/sql"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 	"time"
-	"io/ioutil"
 
 	_ "github.com/lib/pq"
 
-	// "github.com/robfig/cron/v3"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -22,7 +19,6 @@ var (
 	password string
 	dbname   string
 	botToken string
-	pinFilePath = "/app/shared/pin_messages.txt"
 )
 
 func init() {
@@ -36,32 +32,6 @@ func init() {
 	if host == "" || port == "" || user == "" || password == "" || dbname == "" || botToken == "" {
 		log.Fatal("Some environment variables are not set")
 	}
-}
-
-func savePinnedMessage(chatID int64, messageID int, typePull string) error {
-	data := fmt.Sprintf("%d %d %s\n", chatID, messageID, typePull)
-	return ioutil.WriteFile(healthcheckFilePath, []byte(data), 0644)
-}
-
-func getPinnedMessage(typePull string) (int64, int, error) {
-	content, err := ioutil.ReadFile(healthcheckFilePath)
-	if err != nil {
-		return 0, 0, err
-	}
-
-	var chatID int64
-	var messageID int
-	var savedTypePull string
-
-	lines := strings.Split(string(content), "\n")
-	for _, line := range lines {
-		fmt.Sscanf(line, "%d %d %s", &chatID, &messageID, &savedTypePull)
-		if savedTypePull == typePull {
-			return chatID, messageID, nil
-		}
-	}
-
-	return 0, 0, fmt.Errorf("no pinned message found for type: %s", typePull)
 }
 
 func main() {
@@ -91,30 +61,11 @@ func main() {
 		"сов",
 	}
 
-    // // Создание экземпляра cron
-	// c := cron.New()
-
-	// // Добавление задачи, которая будет выполняться каждую минуту
-	// _, err := c.AddFunc("0 1 * * *", func() {
-	// 	// log.Println("Задача выполнена:", time.Now())
-	// })
-
-	// if err != nil {
-	// 	log.Printf("Ошибка при добавлении функции в cron: %sn", err)
-	// 	return
-	// }
-	
-	// // Запуск планировщика задач
-	// c.Start()
-
 	bot, err := tgbotapi.NewBotAPI(botToken)
 
 	if err != nil {
 		log.Panic(err)
 	}
-
-	// bot.Debug = true
-	// log.Printf("Authorized on account %s", bot.Self.UserName)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = ONE_MIN
@@ -122,7 +73,7 @@ func main() {
 	updates := bot.GetUpdatesChan(u)
 
 	for update := range updates {
-		if update.Message != nil { // If we got a message
+		if update.Message != nil {
 
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 
@@ -161,15 +112,7 @@ func main() {
 						DisableNotification: false,
 					}
 
-					unpinChatID, unpinMessageID := postgresPin(pin, WHERE_LOCATION)
-
-					unpin := tgbotapi.UnpinChatMessageConfig{
-						ChatID:    unpinChatID,
-						MessageID: unpinMessageID,
-					}
-
 					bot.Send(poll)
-					bot.Send(unpin)
 					bot.Send(pin)
 				}
 
@@ -190,15 +133,7 @@ func main() {
 						DisableNotification: false,
 					}
 
-					unpinChatID, unpinMessageID := postgresPin(pin, TOWN_LOCATION)
-
-					unpin := tgbotapi.UnpinChatMessageConfig{
-						ChatID:    unpinChatID,
-						MessageID: unpinMessageID,
-					}
-
 					bot.Send(poll)
-					bot.Send(unpin)
 					bot.Send(pin)
 				}
 			}
